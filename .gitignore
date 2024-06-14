@@ -1,3 +1,71 @@
+# === Node.js specific
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.env
+.env.*.local
+.eslintcache
+.parcel-cache
+.next/
+out/
+dist/
+coverage/
+.DS_Store
+
+# Dependency directories
+jspm_packages/
+.vscode/
+.idea/
+
+# Optional npm cache directory
+.npm
+
+# Optional REPL history
+.node_repl_history
+
+# macOS files
+*.DS_Store
+
+# Windows thumbnail cache files
+Thumbs.db
+
+# Lockfiles
+package-lock.json
+yarn.lock
+.pnpm-lock.yaml
+
+# Logs
+logs
+*.log
+logs/
+
+# Build directories
+build/
+public/
+
+# Test reports
+*.junit.xml
+.cypress/
+cypress/screenshots/
+cypress/videos/
+
+# System files
+*.swp
+*.swo
+*.swn
+*.bak
+*.old
+*.tmp
+
+# Specific editors
+*.sublime-workspace
+*.sublime-project
+*.log
+
+
+# === Python specific
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -161,4 +229,5 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
+# === Project related
 credentials.json

@@ -1,0 +1,10 @@
+{
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "scripts": {
+    "start:python": "source env/bin/activate && python manage.py runserver",
+    "start:npm": "cd frontend && npm start",
+    "start": "concurrently \"npm run start:python\" \"npm run start:npm\""
+  }
+}
