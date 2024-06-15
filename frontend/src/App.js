@@ -1,35 +1,51 @@
-import logo from './logo.svg';
 import './App.css';
+import { useState } from 'react';
 import { Button, CardColumns, Card, CardBody, CardText } from 'reactstrap';
+import axios from "axios";
+
 
 function App() {
-  return (
-    <div className="App">
-        <div className="App-body">
-            <div>Model:</div>
-            <CardColumns style={{width: '24rem'}}>
-                <Card>
-                    <CardBody>
-                        <CardText>
-                            This card has supporting text below as an additional content 1.
-                        </CardText>
-                    </CardBody>
-                </Card>
-                <Card>
-                    <CardBody>
-                        <CardText>
-                            <form>
-                                <div className="mb-3">
-                                    <textarea className="form-control" id="inputTextarea" rows="1" placeholder="Message Chatbot..."></textarea>
-                                </div>
-                                <button type="submit" className="btn btn-primary">Submit</button>
-                            </form>
-                        </CardText>
-                    </CardBody>
-                </Card>
-            </CardColumns>
+    const [userInputValue, setUserInputValue] = useState('');
+    const [chatbotMessage, setChatbotMessages] = useState('');
+
+    function handleMessageChange(event) {
+        setUserInputValue(event.target.value);
+    }
+
+    function handleSubmit() {
+        axios.post('http://localhost:8000/chat/', {
+            message: userInputValue
+        }).then(response => {
+            setChatbotMessages(response.data);
+            setUserInputValue('');
+        }).catch(error => {
+            console.log(error);
+        });
+    }
+
+    return (
+        <div className="App">
+            <div className="App-body">
+                <div>Django React - REST API, Single Page Application</div>
+                <div>Model:</div>
+                <CardColumns style={{width: '24rem'}}>
+                    <Card>
+                        <CardBody>
+                            <CardText>
+                                {chatbotMessage}
+                            </CardText>
+                        </CardBody>
+                    </Card>
+                    <Card>
+                        <CardBody>
+                            <textarea className="form-control" rows="1" onChange={handleMessageChange}
+                                placeholder="Message Chatbot..." value={userInputValue}></textarea>
+                            <button type="submit" className="btn btn-primary" onClick={handleSubmit}>Submit</button>
+                        </CardBody>
+                    </Card>
+                </CardColumns>
+            </div>
         </div>
-    </div>
     );
 }
 

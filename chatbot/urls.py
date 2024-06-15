@@ -24,5 +24,6 @@ router.register(r'prompts', views.PromptView, 'prompt')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls))
+    path('api/', include(router.urls)),
+    path('chat/', views.chat, name='chat')
 ]
