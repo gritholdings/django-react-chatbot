@@ -1,12 +1,34 @@
 import './App.css';
-import { useState } from 'react';
-import { Button, CardColumns, Card, CardBody, CardText } from 'reactstrap';
+import { useState, useEffect } from 'react';
+import { CardColumns, Card, CardBody, CardText,
+    Dropdown, DropdownToggle, DropdownMenu, DropdownItem
+} from 'reactstrap';
 import axios from "axios";
 
 
 function App() {
     const [userInputValue, setUserInputValue] = useState('');
     const [chatbotMessage, setChatbotMessages] = useState('');
+    const [modelList, setModelList] = useState([]);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [dropdownValue, setDropdownValue] = useState('Select Model');
+
+    useEffect(() => {
+        axios.get('http://localhost:8000/chat_models/').then(response => {
+            setModelList(response.data.models);
+        }).catch(error => {
+            console.log(error);
+        });
+    }, []);
+
+    function toggle() {
+        setDropdownOpen(prevState => !prevState);
+    }
+
+    function handleDropdownClick(event) {
+        let model = modelList.find(model => model[1] === event.target.textContent)[0];
+        setDropdownValue(model);
+    }
 
     function handleMessageChange(event) {
         setUserInputValue(event.target.value);
@@ -14,7 +36,8 @@ function App() {
 
     function handleSubmit() {
         axios.post('http://localhost:8000/chat/', {
-            message: userInputValue
+            message: userInputValue,
+            model: dropdownValue
         }).then(response => {
             setChatbotMessages(response.data);
             setUserInputValue('');
@@ -27,7 +50,17 @@ function App() {
         <div className="App">
             <div className="App-body">
                 <div>Django React - REST API, Single Page Application</div>
-                <div>Model:</div>
+                <div className="d-flex p-5">
+                    <Dropdown isOpen={dropdownOpen} toggle={toggle}>
+                        <DropdownToggle caret>{dropdownValue}</DropdownToggle>
+                        <DropdownMenu>
+                            {modelList.map((model, index) => (
+                                <DropdownItem key={index}
+                                    onClick={handleDropdownClick}>{model[1]}</DropdownItem>
+                            ))}
+                        </DropdownMenu>
+                    </Dropdown>
+                </div>
                 <CardColumns style={{width: '24rem'}}>
                     <Card>
                         <CardBody>
