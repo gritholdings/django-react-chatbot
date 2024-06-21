@@ -1,0 +1,50 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Django",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/manage.py",
+            "args": [
+                "runserver",
+                "--noreload",
+                "--nothreading"
+            ],
+            "django": true,
+            "justMyCode": true,
+            "autoReload": {
+                "enable": true
+            },
+            "console": "integratedTerminal",
+            "env": {
+                "DJANGO_SETTINGS_MODULE": "chatbot.settings"
+            },
+            "envFile": "${workspaceFolder}/env",
+            "stopOnEntry": false
+        },
+        {
+            "name": "Start React",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceFolder}/frontend/node_modules/.bin/react-scripts",
+            "args": [
+                "start"
+            ],
+            "cwd": "${workspaceFolder}/frontend",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "start"
+            ],
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "skipFiles": ["<node_internals>/**"]
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Debug Django + Start React",
+            "configurations": ["Debug Django", "Start React"]
+        }
+    ]
+}

@@ -1,7 +1,9 @@
 # django-react-chatbot
 
 ## Video Demonstration
-[Watch the video](https://drive.google.com/file/d/14gp01SMDuaTbe7a5FyfBtgeKr_y1zlDH/view)
+![Preview](./github_django-react-chatbot_demoapp_preview.png)
+[Watch the video](https://drive.google.com/file/d/1xppHfOcZCOiW7K0ZCd771ap9fkkC3fh9/view)
+
 
 ## Getting Started
 Before running the application, make sure to install the necessary dependencies. Follow these steps:

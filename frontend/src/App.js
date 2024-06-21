@@ -8,7 +8,7 @@ import axios from "axios";
 
 function App() {
     const [userInputValue, setUserInputValue] = useState('');
-    const [chatbotMessage, setChatbotMessages] = useState('');
+    const [chatbotMessages, setChatbotMessages] = useState([]);
     const [modelList, setModelList] = useState([]);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [dropdownValue, setDropdownValue] = useState('Select Model');
@@ -26,7 +26,7 @@ function App() {
     }
 
     function handleDropdownClick(event) {
-        let model = modelList.find(model => model[1] === event.target.textContent)[0];
+        let model = modelList.find(model => model[1] === event.target.textContent)[1];
         setDropdownValue(model);
     }
 
@@ -35,11 +35,12 @@ function App() {
     }
 
     function handleSubmit() {
+        const newMessages = [...chatbotMessages, { role: 'user', content: userInputValue }];
         axios.post('http://localhost:8000/chat/', {
-            message: userInputValue,
+            messages: newMessages,
             model: dropdownValue
         }).then(response => {
-            setChatbotMessages(response.data);
+            setChatbotMessages([...newMessages, { role: 'assistant', content: response.data }]);
             setUserInputValue('');
         }).catch(error => {
             console.log(error);
@@ -62,13 +63,16 @@ function App() {
                     </Dropdown>
                 </div>
                 <CardColumns style={{width: '24rem'}}>
-                    <Card>
-                        <CardBody>
-                            <CardText>
-                                {chatbotMessage}
-                            </CardText>
-                        </CardBody>
-                    </Card>
+                    {chatbotMessages.map((chatbotMessage, index) => (
+                        <Card key={index}>
+                            <CardBody>
+                                <CardText>
+                                    {chatbotMessage.role === 'user' ? 'User: ' : 'Assistant: '}
+                                    {chatbotMessage.content}
+                                </CardText>
+                            </CardBody>
+                        </Card>
+                    ))}
                     <Card>
                         <CardBody>
                             <textarea className="form-control" rows="1" onChange={handleMessageChange}

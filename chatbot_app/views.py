@@ -21,8 +21,7 @@ def chat_models(request):
 @api_view(['GET', 'POST'])
 def chat(request):
     if request.method == 'POST':
-        message = request.data.get('message')
+        messages = request.data.get('messages')
         model_str = request.data.get('model')
-        model = OpenaiModel[model_str]
-        response = openai_instance.chat(model=model, message=message)
+        response = openai_instance.chat(model=OpenaiModel(model_str), messages=messages)
         return Response(response, status=status.HTTP_200_OK)

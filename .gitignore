@@ -16,7 +16,6 @@ coverage/
 
 # Dependency directories
 jspm_packages/
-.vscode/
 .idea/
 
 # Optional npm cache directory

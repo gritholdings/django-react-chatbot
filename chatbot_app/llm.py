@@ -17,12 +17,11 @@ class OpenaiAdapter:
         # it will access the API key from os.environ
         self.client = OpenAI()
 
-    def chat(self, model: OpenaiModel = OpenaiModel.GPT_3_5, message: str = ""):
-        # Ensure messages is a list of message dictionaries
+    def chat(self, model: OpenaiModel = OpenaiModel.GPT_3_5, messages: list = []):
         formatted_messages = [
-            {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": message}
+            {"role": "system", "content": "You are a helpful assistant."}
         ]
+        formatted_messages.extend(messages)
         completion = self.client.chat.completions.create(
             model=model.value,
             messages=formatted_messages
