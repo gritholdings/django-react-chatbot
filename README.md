@@ -41,3 +41,9 @@ Once the dependencies are installed, you can run the application:
    ```
 
 This command will execute `python manage.py run server` to start the backend server and `npm start` to start the frontend development server concurrently.
+
+## Related Links
+[gritholdings/ios-chatbot](https://github.com/gritholdings/ios-chatbot)
+
+## Author
+Edward Wong
