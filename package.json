@@ -6,5 +6,12 @@
     "start:python": "source env/bin/activate && python manage.py runserver",
     "start:npm": "cd frontend && npm start",
     "start": "concurrently \"npm run start:python\" \"npm run start:npm\""
+  },
+  "dependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/react": "^18.3.8",
+    "@types/react-dom": "^18.3.0",
+    "@types/reactstrap": "^8.7.2",
+    "typescript": "^5.6.2"
   }
 }

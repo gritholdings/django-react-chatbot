@@ -1,3 +1,4 @@
+import React from 'react';
 import './App.css';
 import { useState, useEffect } from 'react';
 import { CardColumns, Card, CardBody, CardText,
@@ -6,9 +7,14 @@ import { CardColumns, Card, CardBody, CardText,
 import axios from "axios";
 
 
-function App() {
+export default function App() {
     const [userInputValue, setUserInputValue] = useState('');
-    const [chatbotMessages, setChatbotMessages] = useState([]);
+    interface ChatbotMessage {
+        role: string;
+        content: string;
+    }
+    
+    const [chatbotMessages, setChatbotMessages] = useState<ChatbotMessage[]>([]);
     const [modelList, setModelList] = useState([]);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [dropdownValue, setDropdownValue] = useState('Select Model');
@@ -25,12 +31,14 @@ function App() {
         setDropdownOpen(prevState => !prevState);
     }
 
-    function handleDropdownClick(event) {
-        let model = modelList.find(model => model[1] === event.target.textContent)[1];
-        setDropdownValue(model);
+    function handleDropdownClick(event: React.MouseEvent<HTMLElement>) {
+        let model = modelList.find(model => model[1] === (event.target as HTMLElement).textContent);
+        if (model) {
+            setDropdownValue(model[1]);
+        }
     }
 
-    function handleMessageChange(event) {
+    function handleMessageChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
         setUserInputValue(event.target.value);
     }
 
@@ -75,7 +83,7 @@ function App() {
                     ))}
                     <Card>
                         <CardBody>
-                            <textarea className="form-control" rows="1" onChange={handleMessageChange}
+                            <textarea className="form-control" rows={1} onChange={handleMessageChange}
                                 placeholder="Message Chatbot..." value={userInputValue}></textarea>
                             <button type="submit" className="btn btn-primary" onClick={handleSubmit}>Submit</button>
                         </CardBody>
@@ -85,5 +93,3 @@ function App() {
         </div>
     );
 }
-
-export default App;
