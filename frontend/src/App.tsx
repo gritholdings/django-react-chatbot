@@ -1,10 +1,13 @@
 import React from 'react';
+import './tailwind-output.css';
 import './App.css';
 import { useState, useEffect } from 'react';
 import { CardColumns, Card, CardBody, CardText,
     Dropdown, DropdownToggle, DropdownMenu, DropdownItem
 } from 'reactstrap';
 import axios from "axios";
+import { Button } from "./Button.tsx";
+import { Loader2 } from "lucide-react";
 
 
 export default function App() {
@@ -85,7 +88,7 @@ export default function App() {
                         <CardBody>
                             <textarea className="form-control" rows={1} onChange={handleMessageChange}
                                 placeholder="Message Chatbot..." value={userInputValue}></textarea>
-                            <button type="submit" className="btn btn-primary" onClick={handleSubmit}>Submit</button>
+                            <Button type="submit" className="btn btn-primary" onClick={handleSubmit}>Submit</Button>
                         </CardBody>
                     </Card>
                 </CardColumns>

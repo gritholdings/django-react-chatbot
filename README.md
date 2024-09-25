@@ -4,6 +4,8 @@
 ![Preview](./github_django-react-chatbot_demoapp_preview.png)
 [Watch the video](https://drive.google.com/file/d/1xppHfOcZCOiW7K0ZCd771ap9fkkC3fh9/view)
 
+* For the backend, it uses Python (Django)
+* For the frontend, it uses Typescript (React), Radix UI, Tailwind CSS, and shadcn/ui.
 
 ## Getting Started
 Before running the application, make sure to install the necessary dependencies. Follow these steps:
