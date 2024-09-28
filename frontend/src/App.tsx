@@ -1,13 +1,13 @@
 import React from 'react';
 import './tailwind-output.css';
-import './App.css';
+import '@radix-ui/themes/styles.css';
 import { useState, useEffect } from 'react';
 import { CardColumns, Card, CardBody, CardText,
     Dropdown, DropdownToggle, DropdownMenu, DropdownItem
 } from 'reactstrap';
 import axios from "axios";
-import { Button } from "./Button.tsx";
-import { Loader2 } from "lucide-react";
+import { Button } from "./components/base/Button.tsx";
+import { SimpleSelect } from "./components/SimpleSelect.tsx";
 
 
 export default function App() {
@@ -60,39 +60,42 @@ export default function App() {
 
     return (
         <div className="App">
-            <div className="App-body">
-                <div>Django React - REST API, Single Page Application</div>
-                <div className="d-flex p-5">
-                    <Dropdown isOpen={dropdownOpen} toggle={toggle}>
-                        <DropdownToggle caret>{dropdownValue}</DropdownToggle>
-                        <DropdownMenu>
-                            {modelList.map((model, index) => (
-                                <DropdownItem key={index}
-                                    onClick={handleDropdownClick}>{model[1]}</DropdownItem>
-                            ))}
-                        </DropdownMenu>
-                    </Dropdown>
-                </div>
-                <CardColumns style={{width: '24rem'}}>
-                    {chatbotMessages.map((chatbotMessage, index) => (
-                        <Card key={index}>
+                <div className="App-body">
+                    <div>Django React - REST API, Single Page Application</div>
+                    <div>
+                        <SimpleSelect />
+                    </div>
+                    <div className="d-flex p-5">
+                        <Dropdown isOpen={dropdownOpen} toggle={toggle}>
+                            <DropdownToggle caret>{dropdownValue}</DropdownToggle>
+                            <DropdownMenu>
+                                {modelList.map((model, index) => (
+                                    <DropdownItem key={index}
+                                        onClick={handleDropdownClick}>{model[1]}</DropdownItem>
+                                ))}
+                            </DropdownMenu>
+                        </Dropdown>
+                    </div>
+                    <CardColumns style={{width: '24rem'}}>
+                        {chatbotMessages.map((chatbotMessage, index) => (
+                            <Card key={index}>
+                                <CardBody>
+                                    <CardText>
+                                        {chatbotMessage.role === 'user' ? 'User: ' : 'Assistant: '}
+                                        {chatbotMessage.content}
+                                    </CardText>
+                                </CardBody>
+                            </Card>
+                        ))}
+                        <Card>
                             <CardBody>
-                                <CardText>
-                                    {chatbotMessage.role === 'user' ? 'User: ' : 'Assistant: '}
-                                    {chatbotMessage.content}
-                                </CardText>
+                                <textarea className="form-control" rows={1} onChange={handleMessageChange}
+                                    placeholder="Message Chatbot..." value={userInputValue}></textarea>
+                                <Button type="submit" className="btn btn-primary" onClick={handleSubmit}>Submit</Button>
                             </CardBody>
                         </Card>
-                    ))}
-                    <Card>
-                        <CardBody>
-                            <textarea className="form-control" rows={1} onChange={handleMessageChange}
-                                placeholder="Message Chatbot..." value={userInputValue}></textarea>
-                            <Button type="submit" className="btn btn-primary" onClick={handleSubmit}>Submit</Button>
-                        </CardBody>
-                    </Card>
-                </CardColumns>
-            </div>
+                    </CardColumns>
+                </div>
         </div>
     );
 }
