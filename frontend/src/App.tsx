@@ -1,101 +1,78 @@
-import React from 'react';
-import './tailwind-output.css';
+import React, { useRef } from 'react';
 import '@radix-ui/themes/styles.css';
 import { useState, useEffect } from 'react';
-import { CardColumns, Card, CardBody, CardText,
-    Dropdown, DropdownToggle, DropdownMenu, DropdownItem
-} from 'reactstrap';
 import axios from "axios";
-import { Button } from "./components/base/Button.tsx";
+import { Card } from "./components/base/Card.tsx";
+import { Textarea } from "./components/base/Textarea.tsx";
 import { SimpleSelect } from "./components/SimpleSelect.tsx";
 
 
 export default function App() {
-    const [userInputValue, setUserInputValue] = useState('');
-    interface ChatbotMessage {
-        role: string;
-        content: string;
-    }
-    
-    const [chatbotMessages, setChatbotMessages] = useState<ChatbotMessage[]>([]);
-    const [modelList, setModelList] = useState([]);
-    const [dropdownOpen, setDropdownOpen] = useState(false);
-    const [dropdownValue, setDropdownValue] = useState('Select Model');
+  const [userInputValue, setUserInputValue] = useState('');
+  interface ChatbotMessage {
+    role: string;
+    content: string;
+  }
+  
+  const [chatbotMessages, setChatbotMessages] = useState<ChatbotMessage[]>([]);
+  const [modelList, setModelList] = useState([]);
+  const [selectedModel, setSelectedModelValue] = useState('');
+  const simpleSelectOptions = ['gpt-3.5-turbo', 'gpt-4-turbo'];
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-    useEffect(() => {
-        axios.get('http://localhost:8000/chat_models/').then(response => {
-            setModelList(response.data.models);
-        }).catch(error => {
-            console.log(error);
-        });
-    }, []);
+  useEffect(() => {
+    axios.get('http://localhost:8000/chat_models/').then(response => {
+      setModelList(response.data.models);
+      if (response.data.models.length > 0) {
+        console.log(response.data.models);
+        setSelectedModelValue(response.data.models[0][1]);
+      }
+    }).catch(error => {
+        console.log(error);
+    });
+  }, []);
 
-    function toggle() {
-        setDropdownOpen(prevState => !prevState);
-    }
+  function handleMessageChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
+    setUserInputValue(event.target.value);
+  }
 
-    function handleDropdownClick(event: React.MouseEvent<HTMLElement>) {
-        let model = modelList.find(model => model[1] === (event.target as HTMLElement).textContent);
-        if (model) {
-            setDropdownValue(model[1]);
-        }
-    }
+  function handleSubmit() {
+    const newMessages = [...chatbotMessages, { role: 'user', content: userInputValue }];
+    axios.post('http://localhost:8000/chat/', {
+      messages: newMessages,
+      model: selectedModel
+    }).then(response => {
+      setChatbotMessages([...newMessages, { role: 'assistant', content: response.data }]);
+      textareaRef.current!.value = '';
+    }).catch(error => {
+      console.log(error);
+    });
+  }
 
-    function handleMessageChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
-        setUserInputValue(event.target.value);
-    }
+  const handleSelectChange = (value: string) => {
+    setSelectedModelValue(value);
+  };
 
-    function handleSubmit() {
-        const newMessages = [...chatbotMessages, { role: 'user', content: userInputValue }];
-        axios.post('http://localhost:8000/chat/', {
-            messages: newMessages,
-            model: dropdownValue
-        }).then(response => {
-            setChatbotMessages([...newMessages, { role: 'assistant', content: response.data }]);
-            setUserInputValue('');
-        }).catch(error => {
-            console.log(error);
-        });
-    }
-
-    return (
-        <div className="App">
-                <div className="App-body">
-                    <div>Django React - REST API, Single Page Application</div>
-                    <div>
-                        <SimpleSelect />
-                    </div>
-                    <div className="d-flex p-5">
-                        <Dropdown isOpen={dropdownOpen} toggle={toggle}>
-                            <DropdownToggle caret>{dropdownValue}</DropdownToggle>
-                            <DropdownMenu>
-                                {modelList.map((model, index) => (
-                                    <DropdownItem key={index}
-                                        onClick={handleDropdownClick}>{model[1]}</DropdownItem>
-                                ))}
-                            </DropdownMenu>
-                        </Dropdown>
-                    </div>
-                    <CardColumns style={{width: '24rem'}}>
-                        {chatbotMessages.map((chatbotMessage, index) => (
-                            <Card key={index}>
-                                <CardBody>
-                                    <CardText>
-                                        {chatbotMessage.role === 'user' ? 'User: ' : 'Assistant: '}
-                                        {chatbotMessage.content}
-                                    </CardText>
-                                </CardBody>
-                            </Card>
-                        ))}
-                        <Card>
-                            <CardBody>
-                                <textarea className="form-control" rows={1} onChange={handleMessageChange}
-                                    placeholder="Message Chatbot..." value={userInputValue}></textarea>
-                                <Button type="submit" className="btn btn-primary" onClick={handleSubmit}>Submit</Button>
-                            </CardBody>
-                        </Card>
-                    </CardColumns>
-                </div>
+  return (
+    <div className="app bg-stone-700 w-full h-screen flex flex-col place-items-center">
+      <div className="app-body w-96">
+        <div>
+          <SimpleSelect options={simpleSelectOptions} onChange={handleSelectChange} value={selectedModel}/>
         </div>
-    );
+        {chatbotMessages.map((chatbotMessage, index) => (
+          <Card key={index} className="p-6 my-4">
+            <p>{chatbotMessage.role === 'user' ? 'User: ' : 'Assistant: '}
+              {chatbotMessage.content}
+            </p>
+          </Card>
+        ))}
+        <Textarea ref={textareaRef} placeholder="Message Chatbot" onChange={handleMessageChange}/>
+        <button type="submit" onClick={handleSubmit}>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="gray" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="m15 11.25-3-3m0 0-3 3m3-3v7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  );
 }

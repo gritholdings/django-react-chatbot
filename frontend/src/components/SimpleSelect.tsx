@@ -3,8 +3,8 @@ import * as Select from '@radix-ui/react-select';
 import classnames from 'classnames';
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from '@radix-ui/react-icons';
 
-const SimpleSelect = () => (
-  <Select.Root>
+const SimpleSelect = ({options=[], value, onChange}) => (
+  <Select.Root value={value} onValueChange={onChange}>
     <Select.Trigger
       className="inline-flex items-center justify-center rounded px-[15px] text-[13px] leading-none h-[35px] gap-[5px] bg-white text-violet11 shadow-[0_2px_10px] shadow-black/10 hover:bg-mauve3 focus:shadow-[0_0_0_2px] focus:shadow-black data-[placeholder]:text-violet9 outline-none"
       aria-label="Food"
@@ -21,8 +21,11 @@ const SimpleSelect = () => (
         </Select.ScrollUpButton>
         <Select.Viewport className="p-[5px]">
           <Select.Group>
-            <SelectItem value="gpt-3.5-turbo">gpt-3.5-turbo</SelectItem>
-            <SelectItem value="gpt-4-turbo">gpt-4-turbo</SelectItem>
+            {options.map((option) => (
+              <SelectItem key={option} value={option}>
+                {option}
+              </SelectItem>
+            ))}
           </Select.Group>
         </Select.Viewport>
         <Select.ScrollDownButton className="flex items-center justify-center h-[25px] bg-white text-violet11 cursor-default">
